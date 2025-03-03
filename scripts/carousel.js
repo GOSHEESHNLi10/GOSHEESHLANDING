@@ -1,24 +1,37 @@
-// 3D Orbit Carousel for GOSHEESH NFTs
+// 3D Orbit Carousel for GOSHEESH NFTs with Lore Integration
 
 document.addEventListener('DOMContentLoaded', function() {
     // Configuration for the carousel
     const config = {
         numItems: 10, // Number of NFTs to display
-        radius: 700, // Radius of the orbit
+        radius: 380, // Reduced radius
         autoRotate: true, // Whether to auto-rotate
-        rotationSpeed: 0.005, // Speed of auto-rotation
+        rotationSpeed: -0.003, // Negative value to reverse spin direction
+        // Updated to match your file naming
         videoSources: [
-            // Replace these with your actual video paths once you have them
-            'assets/nft1.mp4',
-            'assets/nft2.mp4',
-            'assets/nft3.mp4',
-            'assets/nft4.mp4',
-            'assets/nft5.mp4',
-            'assets/nft6.mp4',
-            'assets/nft7.mp4',
-            'assets/nft8.mp4',
-            'assets/nft9.mp4',
-            'assets/nft10.mp4'
+            'assets/1GOSHEESH.mp4',
+            'assets/2GOSHEESH.mp4',
+            'assets/3GOSHEESH.mp4',
+            'assets/4GOSHEESH.mp4',
+            'assets/5GOSHEESH.mp4',
+            'assets/6GOSHEESH.mp4',
+            'assets/7GOSHEESH.mp4',
+            'assets/8GOSHEESH.mp4',
+            'assets/9GOSHEESH.mp4',
+            'assets/10GOSHEESH.mp4'
+        ],
+        // Lore segments for each NFT
+        loreSegments: [
+            "FROM PURE SOURCE *LIGHT ENERGY* CAME GAIA (1/10)", 
+            "SHE CREATED LIFE FROM COSMIC ESSENCE (2/10)", 
+            "GOSHEESH EMERGED AS A GIFTED YOUNG WIZARD (3/10)", 
+            "HE FORMED BONDS WITH MYTHICAL CREATURES ACROSS REALMS (4/10)", 
+            "WHEN HIS SOUL GRADUATED INTO THE HEART (5/10)", 
+            "HE FOUND HIS WAY BACK TO GAIA (6/10)", 
+            "SHE AWAKENED HIS TRUE CELESTIAL VOICE (7/10)", 
+            "WITH PROFOUND COSMIC WISDOM HE BORE WITNESS (8/10)", 
+            "AS HIS GOLDEN CHILD OF LIGHT WAS BORN INTO BEING (9/10)", 
+            "HIS FORM WAS THEN TAKEN BY THE PURE LOVING SOURCE LIGHT FROM WHICH GAIA CAME (10/10)"
         ]
     };
 
@@ -26,6 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const carouselOrbit = document.querySelector('.carousel-orbit');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
+
+    // Create lore display element if it doesn't exist
+    let loreDisplay = document.querySelector('.lore-display');
+    if (!loreDisplay) {
+        loreDisplay = document.createElement('div');
+        loreDisplay.className = 'lore-display';
+        document.querySelector('.carousel-container').appendChild(loreDisplay);
+    }
 
     // State variables
     let currentIndex = 0;
@@ -35,29 +56,68 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create carousel items
     function createCarouselItems() {
+        carouselOrbit.innerHTML = ''; // Clear any existing items
+        
         for (let i = 0; i < config.numItems; i++) {
             const item = document.createElement('div');
             item.className = 'carousel-item';
+            item.dataset.index = i; // Store the index for lore reference
             if (i === 0) item.classList.add('active');
 
-            // Create video element
-            const video = document.createElement('video');
-            video.src = config.videoSources[i % config.videoSources.length];
-            video.loop = true;
-            video.muted = true;
-            video.playsInline = true;
-            
-            // Only autoplay the active video
-            if (i === 0) {
-                video.autoplay = true;
+            // Use videos with fallback to placeholders
+            if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+                // Try to load videos first
+                const video = document.createElement('video');
+                video.src = config.videoSources[i % config.videoSources.length];
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                video.autoplay = true; // Autoplay all videos
+                
+                // Handle video load errors by falling back to placeholders
+                video.onerror = function() {
+                    // Remove failed video and add placeholder image
+                    this.remove();
+                    const img = document.createElement('img');
+                    img.src = `https://via.placeholder.com/240x280/111111/FFFFFF?text=GOSHEESH+${i+1}`;
+                    item.appendChild(img);
+                };
+                
+                item.appendChild(video);
+            } else {
+                // In production, always use videos
+                const video = document.createElement('video');
+                video.src = config.videoSources[i % config.videoSources.length];
+                video.loop = true;
+                video.muted = true;
+                video.playsInline = true;
+                video.autoplay = true; // Autoplay all videos
+                
+                item.appendChild(video);
             }
 
-            item.appendChild(video);
+            // Add click handler to open NFT details
+            item.addEventListener('click', function() {
+                if (item.classList.contains('active')) {
+                    // Open NFT in FlowFun with updated URL
+                    window.open(`https://flowfun.xyz/collection/67c61e137d9c5bb5fbaf7b17/token`, '_blank');
+                } else {
+                    // Move carousel to this item
+                    const itemIndex = Array.from(carouselOrbit.children).indexOf(item);
+                    const angleDiff = itemIndex - currentIndex;
+                    targetAngle = currentAngle - (angleDiff * 2 * Math.PI / config.numItems);
+                    isAnimating = true;
+                }
+            });
+
             carouselOrbit.appendChild(item);
             
             // Position in 3D space
             positionItem(item, i);
         }
+
+        // Set initial lore text
+        updateLoreDisplay(0);
     }
 
     // Position an item in 3D space
@@ -74,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         item.style.opacity = Math.max(0.4, opacity).toFixed(2);
         
         // Adjust scale based on z position (items in front are larger)
-        const scale = 0.8 + ((z + config.radius) / (config.radius * 2)) * 0.4;
+        const scale = 0.7 + ((z + config.radius) / (config.radius * 2)) * 0.4; // Reduced scale
         item.style.transform += ` scale(${scale.toFixed(2)})`;
         
         // Store the angle for reference
@@ -103,28 +163,32 @@ document.addEventListener('DOMContentLoaded', function() {
             positionItem(item, index);
         });
         
-        // Update active class
+        // Update active class and lore text
         items.forEach((item, index) => {
             if (index === closestIndex) {
                 if (!item.classList.contains('active')) {
-                    // Pause all videos
-                    items.forEach(i => {
-                        const video = i.querySelector('video');
-                        video.pause();
-                    });
-                    
-                    // Play active video
-                    const activeVideo = item.querySelector('video');
-                    activeVideo.currentTime = 0;
-                    activeVideo.play();
-                    
                     // Update active class
                     document.querySelector('.carousel-item.active')?.classList.remove('active');
                     item.classList.add('active');
                     currentIndex = closestIndex;
+                    
+                    // Update lore display with the corresponding segment
+                    updateLoreDisplay(parseInt(item.dataset.index));
                 }
             }
         });
+    }
+
+    // Update lore display text
+    function updateLoreDisplay(index) {
+        // Change this line to use the correct index (offset by 1)
+        const loreText = config.loreSegments[(index + 9) % 10]; // This will shift it one card to match the correct NFT
+        loreDisplay.textContent = loreText;
+        
+        // Add fade-in animation
+        loreDisplay.classList.remove('fade-in');
+        void loreDisplay.offsetWidth; // Trigger reflow
+        loreDisplay.classList.add('fade-in');
     }
 
     // Animation loop
@@ -140,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 isAnimating = false;
             }
         } else if (config.autoRotate) {
-            // Auto rotate
+            // Auto rotate (now in reverse direction due to negative rotationSpeed)
             currentAngle += config.rotationSpeed;
         }
         
@@ -151,14 +215,30 @@ document.addEventListener('DOMContentLoaded', function() {
         requestAnimationFrame(animate);
     }
 
+    // Make carousel responsive
+    function updateCarouselResponsiveness() {
+        if (window.innerWidth < 768) {
+            config.radius = 330; // Smaller radius on mobile
+        } else {
+            config.radius = 380; // Slightly reduced radius on desktop
+        }
+        
+        // Update positions of all items with new radius
+        document.querySelectorAll('.carousel-item').forEach((item, index) => {
+            positionItem(item, index);
+        });
+    }
+
     // Event handlers
     function goToNext() {
-        targetAngle = currentAngle + (2 * Math.PI / config.numItems);
+        // Since we reversed the rotation, swap next/prev
+        targetAngle = currentAngle - (2 * Math.PI / config.numItems);
         isAnimating = true;
     }
 
     function goToPrev() {
-        targetAngle = currentAngle - (2 * Math.PI / config.numItems);
+        // Since we reversed the rotation, swap next/prev
+        targetAngle = currentAngle + (2 * Math.PI / config.numItems);
         isAnimating = true;
     }
     
@@ -185,6 +265,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Make sure all videos are playing
+    function ensureVideosPlaying() {
+        document.querySelectorAll('.carousel-item video').forEach(video => {
+            if (video.paused) {
+                video.play().catch(e => console.log('Auto-play prevented:', e));
+            }
+        });
+    }
+
     // Initialize carousel
     function init() {
         createCarouselItems();
@@ -206,8 +295,24 @@ document.addEventListener('DOMContentLoaded', function() {
         carouselOrbit.addEventListener('mouseleave', () => {
             config.autoRotate = true;
         });
+        
+        // Responsive handling
+        window.addEventListener('resize', updateCarouselResponsiveness);
+        updateCarouselResponsiveness(); // Call once on init
+        
+        // Periodically ensure videos are playing
+        setInterval(ensureVideosPlaying, 2000);
     }
 
     // Start the carousel
     init();
+    
+    // Scroll tracking for fixed mint button
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 150) {
+            document.body.classList.add('scrolled');
+        } else {
+            document.body.classList.remove('scrolled');
+        }
+    });
 });
