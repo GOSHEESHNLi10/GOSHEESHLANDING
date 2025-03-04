@@ -47,7 +47,7 @@ h1, h2, h3 {
 
 h1 {
     font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem; /* Your reduced margin */
     background: var(--gradient-bg);
     -webkit-background-clip: text;
     background-clip: text;
@@ -56,22 +56,22 @@ h1 {
 
 h2 {
     font-size: 1.8rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.1rem; /* Your reduced margin */
     color: var(--linen);
 }
 
 h3 {
     font-size: 1.2rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.1rem; /* Your reduced margin */
 }
 
 p {
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.1rem; /* Your reduced margin */
 }
 
 /* Header Styles */
 header {
-    padding: 0.8rem 0;
+    padding: 0.1rem 0; /* Your reduced padding */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -81,12 +81,13 @@ header {
 /* GOSHEESH Logo Styling */
 .logo {
     font-family: var(--font-gosheesh);
-    font-size: 2.5rem;
+    font-size: 8rem; /* Your larger size */
     font-weight: 700;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     color: var(--gold);
     text-transform: uppercase;
-    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    text-shadow: 4px 4px 0px rgba(4, 211, 211, 0.3); /* Your teal shadow */
+    margin-bottom: 0.1rem; /* Your reduced margin */
 }
 
 /* Subtitle Styles */
@@ -106,15 +107,28 @@ header {
     padding: 0.8rem 0;
     text-align: center;
     z-index: 5;
-    margin-bottom: 1rem; /* Increased spacing */
+    margin-bottom: 0.1rem; /* Your reduced margin */
 }
 
+/* Animated text effects for tagline and lore */
 .tagline {
     font-size: 1rem;
     max-width: 600px;
-    margin: 0 auto 0.8rem;
+    margin: 0 auto 0.1rem; /* Your reduced margin */
     color: var(--linen);
     text-transform: uppercase;
+    
+    /* Add the mist/theatrical effect */
+    animation: mistPulse 6s ease-in-out infinite;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+/* Create a dramatic mist pulsing effect */
+@keyframes mistPulse {
+    0% { opacity: 0.8; transform: scale(0.98); filter: blur(0.5px); }
+    50% { opacity: 1; transform: scale(1.02); filter: blur(0px); }
+    100% { opacity: 0.8; transform: scale(0.98); filter: blur(0.5px); }
 }
 
 /* NLi10 Typography Styling */
@@ -159,7 +173,7 @@ h1 .nli10 {
 /* Mint Button Styles */
 .mint-action {
     text-align: center;
-    margin: 1.5rem 0 3rem 0; /* Increased bottom margin for spacing from carousel */
+    margin: 1rem 0 1.5rem 0; /* Reduced vertical margins */
     z-index: 20;
     position: relative;
     display: flex;
@@ -207,11 +221,211 @@ h1 .nli10 {
     opacity: 0.9;
 }
 
+/* Email capture form above payment buttons */
+.email-capture {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 1rem auto; /* Slightly reduced margin */
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.email-input-group {
+    display: flex;
+    margin-bottom: 1rem;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.email-input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--dark);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+}
+
+.email-input:focus {
+    outline: none;
+}
+
+.email-submit {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--sapphire) 100%);
+    border: none;
+    color: var(--light);
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+/* Payment Options Styling */
+.payment-options {
+    margin: 0 auto 1rem; /* Reduced margin */
+    text-align: center;
+    padding: 0;
+    max-width: 500px;
+}
+
+.payment-header {
+    margin-bottom: 0.5rem; /* Reduced margin */
+}
+
+.payment-header h3 {
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+}
+
+.payment-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.payment-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px solid;
+    color: var(--light);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    min-width: 150px;
+    font-size: 1.1rem;
+}
+
+.payment-button i {
+    font-size: 1.4rem;
+    margin-right: 0.8rem;
+}
+
+.payment-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.payment-button.paypal {
+    border-color: #0070ba;
+}
+
+.payment-button.paypal:hover {
+    background-color: #0070ba;
+}
+
+.payment-button.venmo {
+    border-color: #3d95ce;
+}
+
+.payment-button.venmo:hover {
+    background-color: #3d95ce;
+}
+
+/* Email Form Styling */
+.email-form {
+    max-width: 400px;
+    margin: 1rem auto;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: none; /* Hidden by default */
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    color: var(--light);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--light);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--emerald);
+    box-shadow: 0 0 0 2px rgba(80, 200, 120, 0.2);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--sapphire) 100%);
+    border: none;
+    color: var(--light);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Success Message Styling */
+.success-message {
+    max-width: 400px;
+    margin: 1rem auto;
+    padding: 1.5rem;
+    background: rgba(80, 200, 120, 0.1);
+    border-radius: 12px;
+    border: 1px solid var(--emerald);
+    text-align: center;
+    display: none; /* Hidden by default */
+}
+
+.success-message i {
+    font-size: 3rem;
+    color: var(--emerald);
+    margin-bottom: 1rem;
+}
+
+.success-message h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--emerald);
+}
+
+.success-message p {
+    font-size: 0.9rem;
+    color: var(--light);
+}
+
 /* Carousel Styles */
 .carousel-container {
     position: relative;
-    height: 280px;
-    margin: 1rem 0 1rem 0; /* Adjusted top margin */
+    height: 340px; /* Taller container for larger main image */
+    margin: 0.5rem 0 2.5rem 0; /* Reduced top margin */
     perspective: 1200px;
     z-index: 10;
 }
@@ -283,7 +497,7 @@ h1 .nli10 {
     background-color: var(--emerald);
 }
 
-/* Lore Display Styles */
+/* Enhanced lore display for a more theatrical feel */
 .lore-display {
     text-align: center;
     margin: 15px auto 0;
@@ -296,10 +510,22 @@ h1 .nli10 {
     border-radius: 8px;
     backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: opacity 0.3s ease;
+    transition: all 0.5s ease;
     opacity: 0.9;
     position: relative;
     z-index: 20;
+    letter-spacing: 1px;
+    
+    /* Add the theatrical mist effect */
+    animation: loreGlow 10s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* Slow, subtle glow for lore text */
+@keyframes loreGlow {
+    0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+    50% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+    100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
 }
 
 /* Fade-in animation for lore text */
@@ -312,13 +538,50 @@ h1 .nli10 {
     animation: fadeIn 0.5s ease forwards;
 }
 
+/* Add slide animations for mobile carousel */
+@keyframes slideInRight {
+    from { transform: translateX(100%) translateY(-50%); opacity: 0; }
+    to { transform: translateX(-50%) translateY(-50%); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%) translateY(-50%); opacity: 0; }
+    to { transform: translateX(-50%) translateY(-50%); opacity: 1; }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(-50%) translateY(-50%); opacity: 1; }
+    to { transform: translateX(100%) translateY(-50%); opacity: 0; }
+}
+
+@keyframes slideOutLeft {
+    from { transform: translateX(-50%) translateY(-50%); opacity: 1; }
+    to { transform: translateX(-100%) translateY(-50%); opacity: 0; }
+}
+
+.carousel-item.slide-in-right {
+    animation: slideInRight 0.5s forwards;
+}
+
+.carousel-item.slide-in-left {
+    animation: slideInLeft 0.5s forwards;
+}
+
+.carousel-item.slide-out-right {
+    animation: slideOutRight 0.5s forwards;
+}
+
+.carousel-item.slide-out-left {
+    animation: slideOutLeft 0.5s forwards;
+}
+
 /* NFT Info Section */
 .nft-info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1rem;
     padding: 1.5rem 0 0.8rem 0;
-    margin-top: 1.5rem;
+    margin-top: 1rem; /* Reduced margin */
 }
 
 .info-card {
@@ -351,7 +614,7 @@ footer {
     padding: 1rem 0;
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 1.5rem;
+    margin-top: 1rem; /* Reduced margin */
 }
 
 .social-links {
@@ -384,7 +647,7 @@ footer {
 @media (max-width: 768px) {
     /* Header adjustments */
     .logo {
-        font-size: 2rem;
+        font-size: 4rem; /* Between your desktop size and my mobile size */
     }
     
     .subtitle {
@@ -415,46 +678,106 @@ footer {
     
     /* Improved carousel on mobile */
     .carousel-container {
-        height: 240px; /* Shorter container on mobile */
+        height: 320px; /* Taller container for larger images */
         margin-top: 0.5rem;
         margin-bottom: 2.5rem; /* Add more space below for controls */
     }
     
     .carousel-item {
-        width: 180px;  /* Adjusted item size */
-        height: 210px;
+        width: 260px;  /* Larger item size */
+        height: 300px;
     }
     
+    /* Adjust main image size and position */
     .carousel-item.active {
-        transform: translateX(-50%) translateY(-50%) scale(1.15); /* Slightly smaller active scale */
+        transform: translateX(-50%) translateY(-50%) scale(1); 
+        z-index: 10;
     }
     
-    /* Make carousel controls more visible and touchable */
+    /* Position side items */
+    .carousel-item.left-item,
+    .carousel-item.right-item {
+        opacity: 0.5;
+        z-index: 5;
+        display: block !important;
+        transform: translateY(-50%) scale(0.6);
+    }
+    
+    .carousel-item.left-item {
+        left: 15%;
+    }
+    
+    .carousel-item.right-item {
+        left: 85%;
+    }
+    
+    /* Position lore text over the bottom of the image */
+    .lore-display {
+        position: absolute;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        max-width: 90%;
+        z-index: 20;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+    
+    /* Position controls below the image and lore */
     .carousel-controls {
-        bottom: -30px; /* Position controls lower */
+        bottom: -40px;
         gap: 3rem; /* More space between buttons */
     }
     
+    /* Make carousel controls more visible and touchable */
     .carousel-controls button {
-        width: 48px;
-        height: 48px;
-        background: rgba(80, 200, 120, 0.2);
-        border: 2px solid var(--emerald);
+        width: 50px;
+        height: 50px;
+        background: rgba(0, 0, 0, 0.6);
+        border: 2px solid var(--gold);
+        color: var(--gold);
+        font-size: 1.4rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
-    /* Lore display adjustments */
-    .lore-display {
-        font-size: 0.85rem;
-        padding: 0.7rem 1rem;
-        margin: 0.5rem auto 0;
-        max-width: 90%; /* Limit width on mobile */
-        line-height: 1.4;
+    .carousel-controls button:hover,
+    .carousel-controls button:active {
+        background-color: var(--gold);
+        color: var(--dark);
+        transform: scale(1.1);
     }
     
     /* Layout adjustment to ensure all content fits well */
     .container {
         padding: 0.5rem 12px;
         justify-content: flex-start;
+    }
+    
+    /* Adjust payment buttons for mobile */
+    .payment-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .payment-button {
+        width: 100%;
+    }
+    
+    /* Make email input full width on mobile */
+    .email-input-group {
+        flex-direction: column;
+        border-radius: 12px;
+    }
+    
+    .email-input {
+        padding: 1rem;
+    }
+    
+    .email-submit {
+        padding: 0.8rem;
     }
     
     /* NFT Info section adjustments */
