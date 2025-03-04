@@ -413,15 +413,37 @@ footer {
         margin-bottom: 0rem;
     }
     
-    /* Carousel adjustments */
+    /* Improved carousel on mobile */
     .carousel-container {
-        height: 260px;
+        height: 240px; /* Shorter container on mobile */
+        perspective: 800px; /* Less perspective on mobile */
         margin-top: 0;
     }
     
     .carousel-item {
-        width: 180px;
-        height: 220px;
+        width: 160px;  /* Smaller items on mobile */
+        height: 200px;
+    }
+    
+    /* Improve 3D performance on mobile */
+    .carousel-orbit {
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0, 0, 0);
+        perspective: 1000;
+        -webkit-perspective: 1000;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    
+    /* Make carousel buttons more touchable */
+    .carousel-controls button {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4rem;
+        margin: 0 10px;
     }
 
     /* Lore display adjustments */
@@ -443,19 +465,6 @@ footer {
     
     .info-card p {
         font-size: 0.8rem;
-    }
-    
-    /* Touch-friendly controls */
-    .carousel-controls button {
-        width: 44px;
-        height: 44px;
-        font-size: 1.3rem;
-    }
-    
-    /* Prevent text selection during swipes */
-    .carousel-orbit {
-        user-select: none;
-        -webkit-user-select: none;
     }
     
     h1 .nli10 {

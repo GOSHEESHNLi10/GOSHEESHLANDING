@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configuration for the carousel
     const config = {
         numItems: 10, // Number of NFTs to display
-        radius: 380, // Reduced radius
+        radius: 380, // For desktop
         autoRotate: true, // Whether to auto-rotate
         rotationSpeed: -0.003, // Negative value to reverse spin direction
         // Updated to match your file naming
@@ -53,6 +53,36 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentAngle = 0;
     let targetAngle = 0;
     let isAnimating = false;
+    
+    // Debug info for development
+    function addDebugInfo() {
+        // Only show debug in development
+        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+            const debugDiv = document.createElement('div');
+            debugDiv.style.position = 'fixed';
+            debugDiv.style.top = '10px';
+            debugDiv.style.right = '10px';
+            debugDiv.style.padding = '10px';
+            debugDiv.style.background = 'rgba(0,0,0,0.7)';
+            debugDiv.style.color = 'white';
+            debugDiv.style.fontSize = '12px';
+            debugDiv.style.zIndex = '9999';
+            debugDiv.id = 'debug-info';
+            document.body.appendChild(debugDiv);
+            
+            // Update debug info every second
+            setInterval(() => {
+                debugDiv.innerHTML = `
+                    Width: ${window.innerWidth}px<br>
+                    Radius: ${config.radius}px<br>
+                    Current Index: ${currentIndex}<br>
+                    Is Animating: ${isAnimating}<br>
+                    Touch Start: ${touchStartX}<br>
+                    Touch End: ${touchEndX}<br>
+                `;
+            }, 500);
+        }
+    }
 
     // Create carousel items
     function createCarouselItems() {
@@ -134,8 +164,15 @@ document.addEventListener('DOMContentLoaded', function() {
         item.style.opacity = Math.max(0.4, opacity).toFixed(2);
         
         // Adjust scale based on z position (items in front are larger)
-        const scale = 0.7 + ((z + config.radius) / (config.radius * 2)) * 0.4; // Reduced scale
-        item.style.transform += ` scale(${scale.toFixed(2)})`;
+        // Adjust scale for mobile vs desktop
+        let scaleAmount;
+        if (window.innerWidth < 768) {
+            scaleAmount = 0.6 + ((z + config.radius) / (config.radius * 2)) * 0.4;
+        } else {
+            scaleAmount = 0.7 + ((z + config.radius) / (config.radius * 2)) * 0.4;
+        }
+        
+        item.style.transform += ` scale(${scaleAmount.toFixed(2)})`;
         
         // Store the angle for reference
         item.dataset.angle = angle;
@@ -218,9 +255,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make carousel responsive
     function updateCarouselResponsiveness() {
         if (window.innerWidth < 768) {
-            config.radius = 330; // Smaller radius on mobile
+            config.radius = 250; // Much smaller radius on mobile
+            // Slow down autorotation on mobile
+            config.rotationSpeed = -0.0015;
         } else {
-            config.radius = 380; // Slightly reduced radius on desktop
+            config.radius = 380;
+            config.rotationSpeed = -0.003;
         }
         
         // Update positions of all items with new radius
@@ -256,10 +296,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function handleSwipe() {
-        if (touchEndX < touchStartX - 50) {
+        // Add debug logging
+        console.log("Swipe detected: " + (touchEndX - touchStartX) + "px");
+        
+        // Increase threshold to 80px for better mobile experience
+        if (touchEndX < touchStartX - 80) {
             // Swipe left
             goToNext();
-        } else if (touchEndX > touchStartX + 50) {
+        } else if (touchEndX > touchStartX + 80) {
             // Swipe right
             goToPrev();
         }
@@ -278,6 +322,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function init() {
         createCarouselItems();
         animate();
+        
+        // Add debug info for development
+        addDebugInfo();
         
         // Set up event listeners
         prevBtn.addEventListener('click', goToPrev);
@@ -306,13 +353,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Start the carousel
     init();
-    
-    // Scroll tracking for fixed mint button
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 150) {
-            document.body.classList.add('scrolled');
-        } else {
-            document.body.classList.remove('scrolled');
-        }
-    });
 });
