@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 video.muted = true;
                 video.playsInline = true;
                 video.autoplay = true; // Autoplay all videos
+                video.loading = "lazy"; // Add lazy loading for better performance
                 
                 // Handle video load errors by falling back to placeholders
                 video.onerror = function() {
@@ -110,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.remove();
                     const img = document.createElement('img');
                     img.src = `https://via.placeholder.com/240x280/111111/FFFFFF?text=GOSHEESH+${i+1}`;
+                    img.loading = "lazy"; // Add lazy loading for better performance
                     item.appendChild(img);
                 };
                 
@@ -122,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 video.muted = true;
                 video.playsInline = true;
                 video.autoplay = true; // Autoplay all videos
+                video.loading = "lazy"; // Add lazy loading for better performance
                 
                 item.appendChild(video);
             }
@@ -156,20 +159,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const x = Math.sin(angle) * config.radius;
         const z = Math.cos(angle) * config.radius;
         
+        const roundedX = Math.round(x * 100) / 100;
+        const roundedZ = Math.round(z * 100) / 100;
+
         // Apply 3D transform
-        item.style.transform = `translateX(calc(-50% + ${x}px)) translateY(-50%) translateZ(${z}px)`;
+        item.style.transform = `translateX(calc(-50% + ${roundedX}px)) translateY(-50%) translateZ(${roundedZ}px)`;
         
-        // Adjust opacity based on z position (items in front are more visible)
-        const opacity = (z + config.radius) / (config.radius * 2);
-        item.style.opacity = Math.max(0.4, opacity).toFixed(2);
+        // Improved opacity curve: front items more visible, back items more faded
+        const normalizedZ = (z + config.radius) / (config.radius * 2);
+        const opacity = Math.pow(normalizedZ, 0.8); // More dramatic opacity falloff
+        item.style.opacity = Math.max(0.2, opacity).toFixed(2);
         
-        // Adjust scale based on z position (items in front are larger)
-        // Adjust scale for mobile vs desktop
+        // Adjust scale based on z position with improved mobile scaling
         let scaleAmount;
         if (window.innerWidth < 768) {
-            scaleAmount = 0.6 + ((z + config.radius) / (config.radius * 2)) * 0.4;
+            // More dramatic scaling difference on mobile
+            scaleAmount = 0.55 + normalizedZ * 0.6;
         } else {
-            scaleAmount = 0.7 + ((z + config.radius) / (config.radius * 2)) * 0.4;
+            scaleAmount = 0.7 + normalizedZ * 0.4;
         }
         
         item.style.transform += ` scale(${scaleAmount.toFixed(2)})`;
@@ -248,6 +255,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Apply rotation to all items
         updateCarousel();
         
+        // Optimize video playback (new function)
+        optimizeVideoPlayback();
+        
         // Continue animation loop
         requestAnimationFrame(animate);
     }
@@ -255,11 +265,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make carousel responsive
     function updateCarouselResponsiveness() {
         if (window.innerWidth < 768) {
-            config.radius = 250; // Much smaller radius on mobile
-            // Slow down autorotation on mobile
-            config.rotationSpeed = -0.0015;
+            // Better mobile radius to ensure items aren't cut off at screen edges
+            config.radius = 200;
+            // Slow down autorotation on mobile for better visibility
+            config.rotationSpeed = -0.001;
         } else {
-            config.radius = 380;
+            config.radius = 380; // Keep the same desktop radius
             config.rotationSpeed = -0.003;
         }
         
@@ -296,26 +307,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function handleSwipe() {
-        // Add debug logging
-        console.log("Swipe detected: " + (touchEndX - touchStartX) + "px");
+        const swipeDistance = touchEndX - touchStartX;
         
-        // Increase threshold to 80px for better mobile experience
-        if (touchEndX < touchStartX - 80) {
-            // Swipe left
+        // Different thresholds for mobile vs desktop
+        const threshold = window.innerWidth < 768 ? 40 : 80;
+        
+        if (swipeDistance < -threshold) {
+            // Swipe left - go to next
             goToNext();
-        } else if (touchEndX > touchStartX + 80) {
-            // Swipe right
+        } else if (swipeDistance > threshold) {
+            // Swipe right - go to prev
             goToPrev();
         }
     }
 
-    // Make sure all videos are playing
-    function ensureVideosPlaying() {
-        document.querySelectorAll('.carousel-item video').forEach(video => {
-            if (video.paused) {
-                video.play().catch(e => console.log('Auto-play prevented:', e));
-            }
-        });
+    // Optimize video playback for better mobile performance
+    function optimizeVideoPlayback() {
+        // On mobile, only play the visible/active video
+        if (window.innerWidth < 768) {
+            document.querySelectorAll('.carousel-item video').forEach(video => {
+                const item = video.closest('.carousel-item');
+                if (item.classList.contains('active')) {
+                    if (video.paused) video.play().catch(e => console.log('Auto-play prevented:', e));
+                } else {
+                    if (!video.paused) video.pause();
+                }
+            });
+        } else {
+            // On desktop, play all videos
+            document.querySelectorAll('.carousel-item video').forEach(video => {
+                if (video.paused) video.play().catch(e => console.log('Auto-play prevented:', e));
+            });
+        }
     }
 
     // Initialize carousel
@@ -347,8 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('resize', updateCarouselResponsiveness);
         updateCarouselResponsiveness(); // Call once on init
         
-        // Periodically ensure videos are playing
-        setInterval(ensureVideosPlaying, 2000);
+        // Initial video optimization
+        optimizeVideoPlayback();
     }
 
     // Start the carousel
