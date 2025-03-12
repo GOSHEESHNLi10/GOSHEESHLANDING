@@ -421,6 +421,11 @@ h1 .nli10 {
     color: var(--light);
 }
 
+/* Helper class for hiding elements */
+.hidden {
+    display: none;
+}
+
 /* Carousel Styles */
 .carousel-container {
     position: relative;
